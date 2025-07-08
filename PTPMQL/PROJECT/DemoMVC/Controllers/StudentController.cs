@@ -34,7 +34,7 @@ namespace DemoMVC.Controllers
             }
 
             var student = await _context.Student
-                .FirstOrDefaultAsync(m => m.PersonID == id);
+                .FirstOrDefaultAsync(m => m.StudentID == id);
             if (student == null)
             {
                 return NotFound();
@@ -54,7 +54,7 @@ namespace DemoMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PersonID,FullName,Address")] Student student)
+        public async Task<IActionResult> Create([Bind("StudentID,FullName,Address")] Student student)
         {
             if (ModelState.IsValid)
             {
@@ -86,9 +86,9 @@ namespace DemoMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("PersonID,FullName,Address")] Student student)
+        public async Task<IActionResult> Edit(string id, [Bind("StudentID,FullName,Address")] Student student)
         {
-            if (id != student.PersonID)
+            if (id != student.StudentID)
             {
                 return NotFound();
             }
@@ -102,7 +102,7 @@ namespace DemoMVC.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!StudentExists(student.PersonID))
+                    if (!StudentExists(student.StudentID))
                     {
                         return NotFound();
                     }
@@ -125,7 +125,7 @@ namespace DemoMVC.Controllers
             }
 
             var student = await _context.Student
-                .FirstOrDefaultAsync(m => m.PersonID == id);
+                .FirstOrDefaultAsync(m => m.StudentID == id);
             if (student == null)
             {
                 return NotFound();
@@ -151,7 +151,7 @@ namespace DemoMVC.Controllers
 
         private bool StudentExists(string id)
         {
-            return _context.Student.Any(e => e.PersonID == id);
+            return _context.Student.Any(e => e.StudentID == id);
         }
     }
 }

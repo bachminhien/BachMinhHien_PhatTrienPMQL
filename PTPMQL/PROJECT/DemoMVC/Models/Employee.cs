@@ -1,6 +1,8 @@
+using DemoMVC.Models;
+
 namespace MvcMovie.Models
 {
-    public class Employee : Person
+    public class Employee : Student
     {
         public string EmployeeId { get; set; }
         public int Agg { get; set; } 
