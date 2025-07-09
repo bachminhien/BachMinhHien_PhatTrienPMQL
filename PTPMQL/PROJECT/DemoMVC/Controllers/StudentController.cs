@@ -54,7 +54,7 @@ namespace DemoMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("StudentID,FullName,Address")] Student student)
+        public async Task<IActionResult> Create([Bind("StudenID,FullName,Address")] Student student)
         {
             if (ModelState.IsValid)
             {
