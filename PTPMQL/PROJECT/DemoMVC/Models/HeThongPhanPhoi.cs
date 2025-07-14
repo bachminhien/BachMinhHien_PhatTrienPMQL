@@ -1,12 +1,15 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-
-namespace DemoMVC.Models;
- 
-[Table("HeThongPhanPhois")]
-public class HeThongPhanPhoi
+namespace DemoMVC.Models
 {
-    [Key]
-    public string MaHTPP { get; set; }
-    public string TenHTPP { get; set; }
+    public class HeThongPhanPhoi
+    {
+        [Key]
+        public string MaHTPP { get; set; }
+        public string TenHTPP { get; set; }
+
+        // Navigation property (nếu muốn liên kết với DaiLy)
+        public ICollection<DaiLy> DaiLys { get; set; }
+    }
+}

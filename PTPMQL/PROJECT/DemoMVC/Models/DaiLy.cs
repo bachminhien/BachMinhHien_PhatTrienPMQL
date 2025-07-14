@@ -1,3 +1,7 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+
 
 namespace DemoMVC.Models
 {
@@ -11,6 +15,7 @@ namespace DemoMVC.Models
 
         // Liên kết với hệ thống phân phối
         public string MaHTPP { get; set; }
-        public HeThongPhanPhoi? HeThongPhanPhoi { get; set; } 
+        [ForeignKey("MaHTPP")]
+        public HeThongPhanPhoi HeThongPhanPhoi { get; set; }
     }
 }

@@ -7,8 +7,9 @@ namespace DemoMVC.Models
     public class Student
     {
         [Key]
-        public string StudentID { get; set; }
-        public string FullName { get; set; }
+        public string StudentID { get; set; } = default!;
+        [Required(ErrorMessage = "FullName is required.")]
+        public string FullName { get; set; } = default!; 
         public string Address { get; set; }
 
     }
