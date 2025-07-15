@@ -7,12 +7,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DemoMVC.Data;
 using DemoMVC.Models;
+using DemoMVC.Models.Process;
 
 namespace DemoMVC.Controllers
 {
     public class StudentController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private ExcelProcess _excelProcess = new ExcelProcess(); 
 
         public StudentController(ApplicationDbContext context)
         {
@@ -55,7 +57,7 @@ namespace DemoMVC.Controllers
             var newStudentID = autoGenerateId.GenerateId(studentID);
             var newStudent = new Student
             {
-               StudentID = newStudentID,
+                StudentID = newStudentID,
                 FullName = string.Empty
             };
             return View(newStudent);
@@ -164,6 +166,59 @@ namespace DemoMVC.Controllers
         private bool StudentExists(string id)
         {
             return _context.Student.Any(e => e.StudentID == id);
+        }
+
+        public async Task<IActionResult> Upload()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Upload(IFormFile file)
+        {
+            if (file != null)
+            {
+                string fileExtension = Path.GetExtension(file.FileName);
+                if (fileExtension != ".xls" && fileExtension != ".xlsx")
+                {
+                    ModelState.AddModelError("", "Please choose excel file to upload!");
+                }
+                else
+                {
+                    var uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", "Excels");
+                    if (!Directory.Exists(uploadFolder))
+                    {
+                         Directory.CreateDirectory(uploadFolder);
+                    }
+                    
+                    // rename file when upload to sever
+                    var fileName = DateTime.Now.ToString("yyyyMMddHHmmss") + fileExtension;
+                    var filePath = Path.Combine(uploadFolder, fileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        //save file to server
+                        await file.CopyToAsync(stream);
+                        //reaf data  from excel file fill DataTable
+                        var dt = _excelProcess.ExcelToDataTable(filePath);
+                        //using for loop to read data from dt
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                        {
+                            //create new Studen object 
+                            var ps = new Student();
+                            //set value to attributes
+                            ps.StudentID = dt.Rows[i][0].ToString();
+                            ps.FullName = dt.Rows[i][1].ToString();
+                            ps.Address = dt.Rows[i][2].ToString();
+                            //add object to context
+                            _context.Add(ps);
+                        }
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
+                return View();
+            }
+            return View(); 
         }
     }
 }

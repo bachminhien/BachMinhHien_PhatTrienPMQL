@@ -1,6 +1,6 @@
 namespace DemoMVC.Models.Process
 {
-    public class AutoGenerateId
+    public class AutoID
     {
         public string GenerateId(string inputID, int prefixLength)
         {
